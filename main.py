@@ -33,7 +33,7 @@ if not GEMINI_API_KEY:
 
 # gemini-2.0-flash was shut down 2026-06-01. 2.5-flash is the direct replacement.
 # Override without editing code:  $env:GEMINI_MODEL = "gemini-2.5-flash-lite"
-MODEL_ID = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL_ID = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
 MAX_CHARS = 2000  # anything longer is almost certainly not a real selection
 
 client = genai.Client(api_key=GEMINI_API_KEY)
