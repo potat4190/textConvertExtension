@@ -31,7 +31,9 @@ if not GEMINI_API_KEY:
         "On Render: add it under Environment."
     )
 
-MODEL_ID = "gemini-2.0-flash"
+# gemini-2.0-flash was shut down 2026-06-01. 2.5-flash is the direct replacement.
+# Override without editing code:  $env:GEMINI_MODEL = "gemini-2.5-flash-lite"
+MODEL_ID = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 MAX_CHARS = 2000  # anything longer is almost certainly not a real selection
 
 client = genai.Client(api_key=GEMINI_API_KEY)
@@ -90,13 +92,22 @@ BRAINROT_PROMPT = (
 def _generate(prompt: str) -> str:
     try:
         response = client.models.generate_content(model=MODEL_ID, contents=prompt)
-    except Exception as exc:  # network, quota, auth — don't leak the detail
-        print(f"[gemini] {type(exc).__name__}: {exc}")
-        raise HTTPException(status_code=502, detail="The AI service is unavailable.")
+    except Exception as exc:
+        # Full detail goes to the server log; only the exception type goes to
+        # the client, so a stack trace can't leak the API key.
+        print(f"[gemini] {type(exc).__name__}: {exc}", flush=True)
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI service error ({type(exc).__name__}). Check the server log.",
+        )
 
     text = (response.text or "").strip()
     if not text:
-        raise HTTPException(status_code=502, detail="Empty response from the model.")
+        # Usually means a safety filter blocked the response.
+        print(f"[gemini] empty response; feedback={getattr(response, 'prompt_feedback', None)}", flush=True)
+        raise HTTPException(
+            status_code=502, detail="The model returned nothing (possibly filtered)."
+        )
     return text
 
 

@@ -6,7 +6,7 @@
 // carry chrome-extension://<your-id>, so the backend can lock CORS down to
 // just this extension.
 
-const API_BASE = "https://REPLACE-ME.onrender.com"; // ← your Render URL
+const API_BASE = "https://textconvertextension.onrender.com"; // ← your Render URL
 
 const ENDPOINTS = {
   shakespeare: "/transform",
@@ -30,7 +30,20 @@ async function transform(style, text) {
     });
 
     if (res.status === 429) throw new Error("Too many requests — wait a moment.");
-    if (!res.ok) throw new Error(`Server error (${res.status})`);
+
+    if (!res.ok) {
+      // FastAPI puts the reason in `detail`. Surface it instead of a bare code,
+      // otherwise every failure looks identical and you can't debug it.
+      let detail = "";
+      try {
+        const body = await res.json();
+        detail = typeof body.detail === "string" ? body.detail : "";
+      } catch {
+        /* body wasn't JSON */
+      }
+      console.error(`[AI Inline] ${res.status}`, detail);
+      throw new Error(detail || `Server error (${res.status})`);
+    }
 
     const data = await res.json();
     if (!data.result) throw new Error("Empty response.");
