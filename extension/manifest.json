@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "AI Inline — Rewrite Selected Text",
+  "version": "1.1.0",
+  "description": "Select text in any text box and rewrite it in a different style — Shakespearean or Gen-Z slang — without leaving the page.",
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["https://REPLACE-ME.onrender.com/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
