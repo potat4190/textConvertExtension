@@ -8,7 +8,7 @@ Two styles right now: Shakespearean English and Gen-Z "brainrot." It works insid
      highest-value thing you can add to this README. -->
 ![Demo](docs/demo.gif)
 
-**[→ Install from the Chrome Web Store]([https://chromewebstore.google.com/detail/ai-inline-%E2%80%94-rewrite-selec/aipkheflklpdkjkoffchgedfgkbhnjik?authuser=0&hl=en])**
+**[→ Install from the Chrome Web Store](https://chromewebstore.google.com/detail/ai-inline-%E2%80%94-rewrite-selec/aipkheflklpdkjkoffchgedfgkbhnjik?authuser=0&hl=en)**
 
 ---
 
